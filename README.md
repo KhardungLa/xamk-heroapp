@@ -17,7 +17,7 @@ flutter build web --release \
 Then replace everything in this repository except `.git` and this README with the contents of `build/web/`, leaving out `_headers`, and push:
 
 ```bash
-rsync -a --delete --exclude .git --exclude README.md --exclude _headers build/web/ <this repository>/
+rsync -a --delete --exclude /.git --exclude /README.md --exclude /_headers build/web/ <this repository>/
 ```
 
 Both flags matter:
