@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/themes/time4sheroes/assets/pulse/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Your partner through the Time for (S)Heroes project.">
+  <!-- Reached only through the link given to participants: search engines
+       are asked not to list it. Deliberately no robots.txt "Disallow" — a
+       crawler that may not fetch the page never reads this tag, and could
+       still list the bare address if it found it linked somewhere. -->
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Heroes Pulse">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Heroes Pulse</title>
+  <link rel="manifest" href="manifest.json">
+
+  <script>
+    // Adding the app to the home screen, read by lib/core/install/.
+    //
+    // Chrome, Edge and Samsung Internet offer the install once, early —
+    // usually before Flutter has started — so the offer is caught here and
+    // kept until the info screen's button asks for it. Safari and Firefox
+    // never make the offer; the info screen gives them steps instead.
+    window.heroesInstall = {
+      offer: null,
+      listeners: [],
+      canPrompt: function () { return this.offer !== null; },
+      isStandalone: function () {
+        return window.matchMedia('(display-mode: standalone)').matches ||
+          window.navigator.standalone === true;
+      },
+      onChange: function (callback) { this.listeners.push(callback); },
+      prompt: async function () {
+        const offer = this.offer;
+        if (!offer) return 'unavailable';
+        // An offer can be used once.
+        this.offer = null;
+        this.notify();
+        offer.prompt();
+        const choice = await offer.userChoice;
+        return choice.outcome;
+      },
+      notify: function () { this.listeners.forEach(function (l) { l(); }); },
+    };
+    window.addEventListener('beforeinstallprompt', function (event) {
+      event.preventDefault();
+      window.heroesInstall.offer = event;
+      window.heroesInstall.notify();
+    });
+    window.addEventListener('appinstalled', function () {
+      window.heroesInstall.offer = null;
+      window.heroesInstall.notify();
+    });
+
+    // Asks the browser not to clear the app's storage when space runs low.
+    // Chrome decides on its own and grants it readily to an installed app;
+    // the answer is not needed, so it is not waited for.
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist();
+    }
+  </script>
+</head>
+<body>
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
